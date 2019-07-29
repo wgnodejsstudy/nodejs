@@ -2,8 +2,35 @@
 <html>
 <head>
     <title>WG NodeJS Study</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
 </head>
 <body>
     <h1>WG NodeJS Study</h1>
+    <form>
+        <label for="summonerName">소환사 아이디</label>
+        <input id="summonerName" type="text" />
+        <button id="searchSummoner">검색</button>
+    </form><br/>
+
+    <h4 style="margin: 0">Result</h4>
+    <textarea id="responseBodyTextArea" style="width: 400px; height: 300px; resize: none"></textarea>
+    
+    <script>
+        $(document).ready(function() {
+            $('#searchSummoner').click(function() {
+                var summonerName = document.getElementById('summonerName').value;
+                $.ajax({
+                    url: 'http://127.0.0.1:52273/summoner/' + summonerName,
+                    type: 'GET',
+                    success: function(data) {
+                        alert('success');
+                    },
+                    error: function(request, status, error) {
+                        alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                    }
+                })
+            });
+        });
+    </script>
 </body>
 </html>
