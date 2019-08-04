@@ -4,27 +4,25 @@ var request = require('request');
 
 // 웹 서버를 생성한다.
 var app = express();
-app.use(express.static('public'));
+app.use(express.static('../HTML'));
 
-var apiKey = 'RGAPI-f93194b1-9964-4ca6-a9f5-f2f3e2d79059';
+var apiKey = 'RGAPI-792c09a4-15d6-44d0-a7a1-2803c4c0c777';
 var apiURL = 'https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/';
 
 // 라우트한다.
-app.get('/summoner/:summonerName', function (request, response) {
-    var summonerName = request.params.summonerName;
+app.get('/summoner', function (req, res) {
+    var summonerName = req.param('summonerName');
     var requestURL = apiURL + encodeURI(summonerName) + '?api_key=' + apiKey;
-    console.log(requestURL)
 
-    var summonerInfo = '';
+    console.log('Request URL : ' + requestURL);
 
-    // Riot Server에 요청한다.
+    // Riot 서버에 요청.
     request.get({
         url: requestURL
     }, function(error, response, body) {
-        summonerInfo = JSON.parse(body);
-    })
-
-    response.send(summonerInfo);
+        console.log("Response :", JSON.parse(body));
+        res.send(JSON.parse(body));
+    });
 });
 
 
