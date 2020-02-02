@@ -8,4 +8,4 @@ PathOfEile test code
 
 2. https://github.com/Sergej-PoE/POE_ItemAlerter
     - Item alert code
-    - 떨어지는 아이템 알람주는 코드인데 packet data 가지고 아이템마자 가지고 있는 고유 아이디 확인하는 코드
+    - 떨어지는 아이템 알람주는 코드인데 packet data 가지고 아이템마다 가지고 있는 고유 아이디 확인하는 코드
