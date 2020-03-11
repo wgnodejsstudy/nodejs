@@ -1,37 +1,38 @@
 const express = require('express');
-const request = require('sync-request');
 const router = express.Router();
-const query = require('../query.js');
-
-const baseUrl = 'https://www.pathofexile.com';
-
-/* GET Methods */
-const apiTradeFetchUri = '/api/trade/fetch/';
-
-/* POST Methods */
-const apiTradeSearchUri = '/api/trade/search/';
-
+const search = require('../service/search.js');
 
 router.get('/', (req, res) => res.json({ username : 'Path of Exile' }));
 
-router.post('/search/:league', (req, res) => {
-  const league = req.params.league;
-  const apiTradeSearchRequestUri = baseUrl + apiTradeSearchUri + league;
-  const requestBody = query.generateQuery('Fragment of the Phoenix'); // 불사조의 지도 조각
-
-  const apiTradeSearchResponseBody = JSON.parse(request('POST', apiTradeSearchRequestUri, { 
-    json : requestBody }).getBody('utf-8'));
+router.get('/search', (req, res) => {
+  const league = req.param('league');
+  const groupName = req.param('name');
   
-  const resultId = apiTradeSearchResponseBody.id;
-  const firstItem = apiTradeSearchResponseBody.result[0];
-  const apiTradeFetchRequestUri = baseUrl + apiTradeFetchUri + firstItem + '?query=' + resultId;
+  if (groupName !== "ShaperRun") {
+    res.send({});
+  }
   
-  const apiTradeFetchResponseBody = JSON.parse(request('GET', apiTradeFetchRequestUri).getBody('utf-8'));
-  const priceAmount = apiTradeFetchResponseBody.result[0].listing.price.amount;
-  const priceCurrency = apiTradeFetchResponseBody.result[0].listing.price.currency;
-  console.log(priceAmount + ' ' + priceCurrency);
+  const phoenix = search.getMinimumPrice(league, 'Fragment of the Phoenix');
+  const hydra = search.getMinimumPrice(league, 'Fragment of the Hydra');
+  const minotaur = search.getMinimumPrice(league, 'Fragment of the Minotaur');
+  const chimera = search.getMinimumPrice(league, 'Fragment of the Chimera');
 
-  res.send(apiTradeFetchResponseBody);
+  const knowledge = search.getMinimumPrice(league, 'Fragment of Knowledge');
+  const shape = search.getMinimumPrice(league, 'Fragment of Shape');
+
+  let inputItem = [];
+  inputItem.push({name: 'Fragment of the Phoenix', amount: phoenix.amout, currency: phoenix.currency});
+  inputItem.push({name: 'Fragment of the Hydra', amount: hydra.amout, currency: hydra.currency});
+  inputItem.push({name: 'Fragment of the Minotaur', amount: minotaur.amout, currency: minotaur.currency});
+  inputItem.push({name: 'Fragment of the Chimera', amount: chimera.amout, currency: chimera.currency});
+
+  let outputItem = [];
+  outputItem.push({name: 'Fragment of Knowledge', amount: knowledge.amout, currency: knowledge.currency});
+  outputItem.push({name: 'Fragment of Shape', amount: shape.amout, currency: shape.currency});
+
+  result = {groupName: groupName, inputItem: inputItem, outputItem: outputItem};
+  res.send(result);
+
 });
 
 module.exports = router;
