@@ -22,9 +22,23 @@ class Customer extends React.Component {
                     <TableRow>
                         {this.props.currency2}
                     </TableRow>
+                    <TableRow>
+                        {this.props.currency3}
+                    </TableRow>
+                    <TableRow>
+                        {this.props.currency4}
+                    </TableRow>
                 </TableCell>
-                <TableCell>{this.props.targetItem}</TableCell>
-                <TableCell>{this.props.targetCurrency}</TableCell>
+                <TableCell>{this.props.targetItem1}
+                    <TableRow>
+                        {this.props.targetItem2}
+                    </TableRow>
+                </TableCell>
+                <TableCell>{this.props.targetCurrency1}
+                    <TableRow>
+                        {this.props.targetCurrency2}
+                    </TableRow>
+                </TableCell>
             </TableRow>
         )
     }
