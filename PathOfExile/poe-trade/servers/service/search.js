@@ -17,12 +17,18 @@ function getMinimumPrice(league, name) {
     json : requestBody }).getBody('utf-8'));
   
   const resultId = apiTradeSearchResponseBody.id;
-  const firstItem = apiTradeSearchResponseBody.result[0];
-  const apiTradeFetchRequestUri = baseUrl + apiTradeFetchUri + firstItem + '?query=' + resultId;
-  
-  const apiTradeFetchResponseBody = JSON.parse(request('GET', apiTradeFetchRequestUri).getBody('utf-8'));
-  const priceAmount = apiTradeFetchResponseBody.result[0].listing.price.amount;
-  const priceCurrency = apiTradeFetchResponseBody.result[0].listing.price.currency;
+  var result = [];
+  for (var idx in apiTradeSearchResponseBody.result) {
+    var apiTradeFetchRequestUri = baseUrl + apiTradeFetchUri + apiTradeSearchResponseBody.result[idx] + '?query=' + resultId;
+    var apiTradeFetchResponseBody = JSON.parse(request('GET', apiTradeFetchRequestUri).getBody('utf-8'));
+    if (apiTradeFetchResponseBody.result.length > 0) {
+      result = apiTradeFetchResponseBody.result[0];
+      break;
+    }
+  }
+
+  const priceAmount = result.listing.price.amount;
+  const priceCurrency = result.listing.price.currency;
 
   return {amout: priceAmount, currency: priceCurrency};
 }
